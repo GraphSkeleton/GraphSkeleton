@@ -83,7 +83,7 @@ Graph::Graph(np::ndarray edge_index_np, np::ndarray star_np) {
         ", num_target: " << num_target_ << ")." << endl;
 }
 
-BOOST_PYTHON_MODULE(graph0622)
+BOOST_PYTHON_MODULE(graph_skeleton)
 {
     boost::python::def("init", init);
     boost::python::class_<Graph>("Graph", boost::python::init<np::ndarray, np::ndarray>())
