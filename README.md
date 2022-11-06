@@ -42,13 +42,13 @@ python xinye_compression.py
 
 ### GNN Deployment
 We provide a GraphSAGE training \& evaluation pipline as the GNN deployment demo. hyper-parameters "cut: no, zip" indicates deployment on origianl graph or skeleton graph.
-Please specify the "file_path" with the corrsponding original or skeleton graph data path in `dgraph_sage.py`, you can also modify other parameters of model in the file or cmd:
+Please specify the "file_path" with the corrsponding original or skeleton graph data path in `dgraph_sage.py`, you can also modify other parameters for training in the file or cmd:
 
 ```
 python dgraph_sage.py --cut no --batch-size 65536 --lr 0.005 --epoch 200 --num-layers 3 --iter 10 # deployment on original graph
 python dgraph_sage.py --cut zip --batch-size 65536 --lr 0.005 --epoch 200 --num-layers 3  --iter 10 # deployment on skeleton graph
 ```
 
-
+### The demos on other datasets are coming soon!
 
 
