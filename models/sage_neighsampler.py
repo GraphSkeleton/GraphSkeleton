@@ -9,6 +9,7 @@ from tqdm import tqdm
 
 class SAGE_NeighSampler(torch.nn.Module):
     def __init__(self
+                 ,device, subgraph_loader
                  , in_channels
                  , hidden_channels
                  , out_channels
@@ -17,6 +18,8 @@ class SAGE_NeighSampler(torch.nn.Module):
                  , batchnorm=True):
         super(SAGE_NeighSampler, self).__init__()
 
+        self.layer_loader = subgraph_loader
+        self.device = device
         self.convs = torch.nn.ModuleList()
         self.convs.append(SAGEConv(in_channels, hidden_channels))
         self.bns = torch.nn.ModuleList()
@@ -73,7 +76,7 @@ class SAGE_NeighSampler(torch.nn.Module):
         x = self.convs[-1](x, adj_t)
         return x.log_softmax(dim=-1)
     
-    def inference(self, x_all, layer_loader, device):
+    def inference(self, x_all):
         # pbar = tqdm(total=x_all.size(0) * self.num_layers, ncols=80)
         # pbar.set_description('Evaluating')
 
@@ -82,16 +85,17 @@ class SAGE_NeighSampler(torch.nn.Module):
         # immediately computing the final representations of each batch.
         for i in range(self.num_layers):
             xs = []
-            for batch_size, n_id, adj in layer_loader:
-                edge_index, _, size = adj.to(device)
-                x = x_all[n_id].to(device)
+            for batch_size, n_id, adj in self.layer_loader:
+                edge_index, _, size = adj.to(self.device)
+                x = x_all[n_id].to(self.device)
                 x_target = x[:size[1]]
                 x = self.convs[i]((x, x_target), edge_index)
                 if i != self.num_layers - 1:
                     x = F.relu(x)
                     if self.batchnorm: 
                         x = self.bns[i](x)
-                xs.append(x)
+                # xs.append(x)
+                xs.append(x.cpu())
 
                 # pbar.update(batch_size)
 
