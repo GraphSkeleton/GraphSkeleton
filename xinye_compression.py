@@ -51,7 +51,7 @@ from gs import *
 import graph0429
 
 print('*'*10, 'skeleton-alpha', '*'*10)
-d = [1,2,2]
+d = [2,1]
 
 
 print(f"Zip nodes (num_edge: {edge_index.shape[1]})... ", end=" ", flush=True)
@@ -65,7 +65,7 @@ target_node = tmp
 
 graph0429.greet()
 g = graph0429.Graph(edge_index, target_node)
-n_id = g.zip(d[0], d[1], d[2])
+n_id = g.zip(d[1], d[0], 2)
 n_edge_index = g.reconstruct_edge(n_id);
 # print(f"n_id: {n_id}")
 # print(f"n_edge_index: {n_edge_index}")
@@ -88,7 +88,7 @@ np.save(f'xinye_alpha.npy', zip_data)
 # In[]:
 
 print('*'*10, 'skeleton-beta', '*'*10)
-d = [1,2,15]
+d = [2,1]
 
 print(f"Build... ", end=" ", flush=True)
 start_time = time.perf_counter()
@@ -106,7 +106,7 @@ print(f"Done! [{time.perf_counter() - start_time:.2f}s]")
 
 print(f"Zip... ", end=" ", flush=True)
 start_time = time.perf_counter()
-n_id = g.extract_skeleton(d[0], d[1], d[2], True, 16)
+n_id = g.extract_skeleton(d[1], d[0], 15, True, 16)
 print(f"Done! [{time.perf_counter() - start_time:.2f}s]")
 
 print(f"Reconstruct edge... ", end=" ", flush=True)
@@ -129,7 +129,7 @@ print('new node number:', n_x.shape[0])
 zip_data = { 'x': n_x, 'y': n_y, 
             'edge_index': n_edge_index, 'edge_weight': n_edge_weight, 
             'train_mask': n_train_mask, 'valid_mask': n_valid_mask, 'test_mask': n_test_mask}
-np.save(f'xinye_beta.npy', zip_data)
+# np.save(f'xinye_beta.npy', zip_data)
 
 
 
