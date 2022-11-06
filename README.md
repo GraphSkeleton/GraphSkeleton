@@ -34,7 +34,7 @@ The currently code demo is based on the dataset [DGraph](https://dgraph.xinye.co
 ```
 
 ### GraphS-Skeleton Generation
-To generate skeleton graphs, a graph compressio script is provided. Please note that in our original paper, hyper-parameters "d1", "d2" are set as 2 and 1, you can also modify the setting of "d" in the script to change the node fetching distance.
+To generate skeleton graphs, a graph compressio script is provided. Please note that in our original paper, hyper-parameters "d1", "d2" are set as 2 and 1, you can also modify the setting of "d" in the script to change the node fetching distance. This script will generate three different sekeleton graphs (i.e., $\alpha$)
 
 ```
 python xinye_compression.py
