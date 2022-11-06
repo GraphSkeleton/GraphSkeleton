@@ -143,7 +143,8 @@ if args.cut =='no':
 
 elif args.cut == 'zip':
     print('-------skeleton-------')
-    zip = np.load('xinye_gamma.npy', allow_pickle=True).item()
+    file_path = 'xinye_gamma.npy'
+    zip = np.load(file_path, allow_pickle=True).item()
     train_mask = torch.from_numpy(zip['train_mask'])
     valid_mask = torch.from_numpy(zip['valid_mask'])
     test_mask = torch.from_numpy(zip['test_mask'])
@@ -154,7 +155,7 @@ elif args.cut == 'zip':
     y = torch.from_numpy(zip['y']).to(device)
     edge_index = torch.from_numpy(zip['edge_index']).type(torch.int64)
 
-
+edge_index = to_undirected(edge_index)
 print('#N{}, #E: {}'.format(x.shape, edge_index.shape))
 
 edge_attr = None
