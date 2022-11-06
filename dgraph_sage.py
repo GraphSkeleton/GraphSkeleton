@@ -27,7 +27,7 @@ from sklearn import metrics
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 import os
 import logging
-from models import SAGE, GATv2_NeighSampler
+from models import SAGE_NeighSampler
 
 def parse_args():
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, conflict_handler='resolve')
@@ -36,10 +36,8 @@ def parse_args():
                         help='sampled node number for each layer')
     parser.add_argument('--device', default='cuda',
                         help='device for computing')
-    parser.add_argument('--cut', default='no', choices = ['no', 'tg', 'bg', 'ac', 'random', 'rd_select', 'zip'],
+    parser.add_argument('--cut', default='no', choices = ['no', 'zip'],
                         help='cut target or random')
-    parser.add_argument('--model', default='gat', choices = ['sage', 'gat'],
-                        help='model')
     parser.add_argument('--sel_ratio', type=float, default=0.5)
     parser.add_argument('--batch-size', default=10, type=int,
                         help='batch size')
@@ -129,29 +127,26 @@ else:
     device = torch.device('cuda:'+str(np.argmax(memory_gpu)))
 
 
-if args.cut != 'zip':
-    file_path = f'data/tec_graph.npz'
+if args.cut =='no':
+    print('-------origin-------')
+    file_path = f'./DGraphFin/dgraphfin.npz'
     dataset = np.load(file_path)
     train_mask = torch.from_numpy(dataset['train_mask'])
     valid_mask = torch.from_numpy(dataset['valid_mask'])
     test_mask = torch.from_numpy(dataset['test_mask'])
-    print('train_mask:', train_mask)
     train_idx = train_mask
     x = torch.from_numpy(dataset['x'])
     x = (x-x.mean(0))/x.std(0)
     y = torch.from_numpy(dataset['y']).to(device)
     # edge_index = torch.from_numpy(dataset['edge_index'].T)
-    print(x.shape)
     edge_index = torch.from_numpy(dataset['edge_index'].T)
-    print('-------NO CUT-------')
 
 elif args.cut == 'zip':
-    print('-------ZIP-------')
-    zip = np.load('xinye_v2_reweighted.npy', allow_pickle=True).item()
+    print('-------skeleton-------')
+    zip = np.load('xinye_gamma.npy', allow_pickle=True).item()
     train_mask = torch.from_numpy(zip['train_mask'])
     valid_mask = torch.from_numpy(zip['valid_mask'])
     test_mask = torch.from_numpy(zip['test_mask'])
-    print('train_mask:', train_mask)
     train_idx = train_mask
 
     x = torch.from_numpy(zip['x'])
@@ -160,8 +155,6 @@ elif args.cut == 'zip':
     edge_index = torch.from_numpy(zip['edge_index']).type(torch.int64)
 
 
-# edge_index = to_undirected(edge_index)
-# x = x.to(torch.float32)
 print('#N{}, #E: {}'.format(x.shape, edge_index.shape))
 
 edge_attr = None
@@ -175,10 +168,10 @@ subgraph_loader = NeighborSampler(edge_index, node_idx=None, sizes=[-1],
                                   batch_size=args.batch_size, shuffle=False,
                                   num_workers=12)
 
-if args.model == 'sage':
-    model = SAGE(args, device, subgraph_loader, x.shape[1], args.hidden_channel, out_channels=2, num_layers=args.num_layers, batchnorm=args.batchnorm)
-elif args.model == 'gat':
-    model = GATv2_NeighSampler(device, subgraph_loader, x.shape[1], args.hidden_channel, out_channels=2, num_layers=args.num_layers, dropout=0.0, layer_heads=[4,2,1], batchnorm=args.batchnorm)
+
+# model = SAGE(args, device, subgraph_loader, x.shape[1], args.hidden_channel, out_channels=2, num_layers=args.num_layers, batchnorm=args.batchnorm)
+model = SAGE_NeighSampler(device, subgraph_loader, x.shape[1], args.hidden_channel, out_channels=2, num_layers=args.num_layers, dropout=0.0, batchnorm=args.batchnorm)
+
 print(model)
 model = model.to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=5e-7)
