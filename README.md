@@ -12,7 +12,7 @@ Install libboost
 sudo apt-get install libboost-all-dev
 ```
 
-### Complie
+### Compile
 
 Compile Graph-Skeleton
 
@@ -24,3 +24,6 @@ make
 cd ..
 ```
 
+### Data Download
+
+The currently code demo is based on the dataset [DGraph](https://dgraph.xinye.com/dataset). 
