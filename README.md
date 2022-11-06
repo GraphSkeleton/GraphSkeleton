@@ -31,3 +31,17 @@ The currently code demo is based on the dataset [DGraph](https://dgraph.xinye.co
 .
 --DGraphFin
    └─dgraphfin.npz
+```
+
+### GraphS-Skeleton Generation
+To generate skeleton graphs, a graph compressio script is provided. 
+```
+python xinye_compression.py
+```
+
+
+
+
+
+
+
