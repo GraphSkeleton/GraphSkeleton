@@ -26,10 +26,7 @@ cd ..
 
 ### Data Download
 
-The currently code demo is based on the dataset [DGraph](https://dgraph.xinye.com/dataset). 
-
-```
+The currently code demo is based on the dataset [DGraph](https://dgraph.xinye.com/dataset). Please unizp the dataset folder and organize as follows:
 .
-└──DGraphFin
-    └──dgraphfin.npz
-```
+--DGraphFin
+   └─dgraphfin.npz
