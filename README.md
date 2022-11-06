@@ -49,6 +49,6 @@ python dgraph_sage.py --cut no --batch-size 65536 --lr 0.005 --epoch 200 --num-l
 python dgraph_sage.py --cut zip --batch-size 65536 --lr 0.005 --epoch 200 --num-layers 3  --iter 10 # deployment on skeleton graph
 ```
 
-### The demos on other datasets and models are coming soon!
+### Demos on more datasets and models are coming soon!
 
 
